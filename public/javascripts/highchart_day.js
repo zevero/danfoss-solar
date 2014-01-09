@@ -9,7 +9,7 @@ $(function () {
             },
             xAxis: {
                 type: 'datetime',
-                dateTimeLabelFormats: { // don't display the dummy year
+                dateTimeLabelFormats: { 
                     month: '%e. %b',
                     year: '%b'
                 }
@@ -41,7 +41,7 @@ $(function () {
             },
             xAxis: {
                 type: 'datetime',
-                dateTimeLabelFormats: { // don't display the dummy year
+                dateTimeLabelFormats: {
                     month: '%e. %b',
                     year: '%b'
                 }
@@ -72,7 +72,7 @@ $(function () {
             },
             xAxis: {
                 type: 'datetime',
-                dateTimeLabelFormats: { // don't display the dummy year
+                dateTimeLabelFormats: {
                     month: '%e. %b',
                     year: '%b'
                 }
@@ -81,8 +81,8 @@ $(function () {
                 title: {
                     text: 'Efficiency [%]'
                 },
-                min: 90,
-                max: 100
+               min: 90,
+               max: 100
             },
             tooltip: {
                 formatter: function() {
@@ -105,7 +105,7 @@ $(function () {
             },
             xAxis: {
                 type: 'datetime',
-                dateTimeLabelFormats: { // don't display the dummy year
+                dateTimeLabelFormats: {
                     month: '%e. %b',
                     year: '%b'
                 }
@@ -113,9 +113,8 @@ $(function () {
             yAxis: {
                 title: {
                     text: 'Ohm [Ω]'
-                }
-                //,
-                //min: 0
+                },
+                min: 0
             },
             tooltip: {
                 formatter: function() {
