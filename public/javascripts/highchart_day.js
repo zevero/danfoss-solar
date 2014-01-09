@@ -79,7 +79,7 @@ $(function () {
                     text: 'Efficiency [%]'
                 },
                 min: 90,
-                max: 105
+                max: 100
             },
             tooltip: {
                 formatter: function() {

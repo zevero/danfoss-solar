@@ -1,1 +1,21 @@
-This can handle the log files from Danfoss TLX Pro Portal-Upload. It displays the data on the browser and serves it as Sunny Explorer CSV which in turn can be used by sunwatcherapp.sineta.de  
+
+Read Danfoss TLX Pro Portal-Upload Data, present it in the browser and convert it to SMA SunnyExplorer CSV
+
+## Feature 1 - View your Data
+
+![Image](Danfoss_Solar.png?raw=true)
+
+
+## Feature 2 - Get your Data in SMA SunnyExplorer CSV
+
+String Data shall be included so that it works with [sunwatcherapp.sineta.de](sunwatcherapp.sineta.de)
+
+
+## Downsides
+
+I still don't know the actual format of SMA SunnyExplorer CSV. I am looking for a sample-file
+
+
+## Where is it testes?
+
+It runs on a Raspberry Pi B and uses Data from a Danfoss TLX Pro + 15K
