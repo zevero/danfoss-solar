@@ -1,4 +1,4 @@
-var path = './data/'
+var path = __dirname + '/../data/'
   ,  prefix = 'danfoss-'
   ,  fs   = require("fs")
   ,  unique = function unique(value, index, self) { return self.indexOf(value) === index;}
@@ -94,6 +94,7 @@ var D = {
    },
    
    dates: function(){
+     console.log(path);
      var dates = [],
          files = fs.readdirSync(path); 
      files.filter(function(file) { return file.substr(0,prefix.length) === prefix; })
