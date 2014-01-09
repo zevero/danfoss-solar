@@ -1,4 +1,6 @@
 $(function () {
+        $('body>h1').append(' ' + S.E + ' kWh');
+  
         $('#DC_P').highcharts({
             chart: {
                 type: 'spline',
@@ -84,6 +86,9 @@ $(function () {
                min: 90,
                max: 100
             },
+            legend: {
+              enabled: false
+            },
             tooltip: {
                 formatter: function() {
                         return '<b>'+ this.series.name +'</b><br/>'+
@@ -93,6 +98,42 @@ $(function () {
             
             series: S.EFF
         });
+        
+        
+        $('#T').highcharts({
+            chart: {
+                type: 'spline',
+                zoomType: 'xy'
+            },
+            title: {
+                text: 'Temperature'
+            },
+            xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: {
+                    month: '%e. %b',
+                    year: '%b'
+                }
+            },
+            yAxis: {
+                title: {
+                    text: 'Temperature [°C]'
+                },
+                min: 0
+            },
+            legend: {
+              enabled: false
+            },
+            tooltip: {
+                formatter: function() {
+                        return '<b>'+ this.series.name +'</b><br/>'+
+                        Highcharts.dateFormat('%H:%M', this.x) +' → '+ this.y +' °C';
+                }
+            },
+            
+            series: S.T
+        });
+        
         
         
         $('#OHM').highcharts({
@@ -115,6 +156,9 @@ $(function () {
                     text: 'Ohm [Ω]'
                 },
                 min: 0
+            },
+            legend: {
+              enabled: false
             },
             tooltip: {
                 formatter: function() {
