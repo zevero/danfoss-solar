@@ -1,7 +1,9 @@
 var path = './data/'
+  ,  prefix = 'danfoss-'
   ,  fs   = require("fs")
+  ,  unique = function unique(value, index, self) { return self.indexOf(value) === index;}
   ;
-  
+
 var D = {
   minuteTable: (function(){
     var table = {}, fields = 'INTERVAL;TIMESTAMP;SERIAL;P_AC;E_DAY;T_WR;U_AC;U_AC_1;U_AC_2;U_AC_3;I_AC;F_AC;U_DC_1;I_DC_1;U_DC_2;I_DC_2;U_DC_3;I_DC_3;S;E_WR;M_WR;I_AC_1;I_AC_2;I_AC_3;P_AC_1;P_AC_2;P_AC_3;F_AC_1;F_AC_2;F_AC_3;R_DC;PC;PCS;PCS_LL;COS_PHI;COS_PHI_LL;S_COS_PHI;Current_Day_Energy;current_Day_Offset;ccEnergyOfDay_WithoutOffset';
@@ -15,28 +17,21 @@ var D = {
     };
   }()),
   minutes4day: function(date){
-    var file = path + date + '.log';
     var minutes=[];
-    fs.readFileSync(file).toString().split('\n').forEach(function (line) {
-      if (!line) return;
-      //console.log(line);
-
-      var fb=line.split('|')[2];
-      //console.log(fb);
-
-      var f = fb.split('-')[1];
-       var skip = 6;
-      fs.readFileSync(path + f).toString().split('\n').forEach(function (minute) {
+    var files = fs.readdirSync(path); 
+   
+    files.filter(function(file) { return file.substr(0,prefix.length+6) === prefix+date; })
+    .forEach(function(file) {
+      var skip = 6;
+      fs.readFileSync(path + file).toString().split('\n').forEach(function (minute) {
         if (skip-- > 0) return;
         var m = minute.split(';');
         if (m.length < 2) return;
         minutes.push(m);
-        //console.log(minute);
-        //console.log(m[1] + ' -> ' + m[3]);
-        //day[day.length] = [m[1], m[3], m[12],m[14],m[16], Math.round(m[12]*m[13]), Math.round(m[14]*m[15]), Math.round(m[16]*m[17])]; //Date, P_AC, U1, U2, U3, P1, P2, P3
       });
     });
     return minutes;
+    
   },
   day: function(date){
     var minutes = D.minutes4day(date);
@@ -99,26 +94,16 @@ var D = {
    },
    
    dates: function(){
-     var dates = [];
-     /*fs.readdir(path, function(err, files) { //DOES NOT WORK WITH EJS!!!
-       files.filter(function(file) { return file.substr(-4) === '.log'; })
-         .forEach(function(date) {
-           dates.push(date);
-         });
-       dates.sort();
-       dates.reverse();
-       return ['a','b','s'];
-       return dates;    
-     });*/
-     
-     var files = fs.readdirSync(path); 
-       files.filter(function(file) { return file.substr(-4) === '.log'; })
-         .forEach(function(date) {
-           dates.push(date.slice(0,-4));
-         });
-       dates.sort();
-       dates.reverse();
-       return dates;    
+     var dates = [],
+         files = fs.readdirSync(path); 
+     files.filter(function(file) { return file.substr(0,prefix.length) === prefix; })
+       .forEach(function(date) {
+         dates.push(date.slice(prefix.length,-6));
+       });
+     dates = dates.filter(unique);
+     dates.sort();
+     dates.reverse();
+     return dates;    
    }
   
 };

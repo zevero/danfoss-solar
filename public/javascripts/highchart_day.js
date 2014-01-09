@@ -1,7 +1,8 @@
 $(function () {
         $('#DC_P').highcharts({
             chart: {
-                type: 'spline'
+                type: 'spline',
+                zoomType: 'xy'
             },
             title: {
                 text: 'DC Power'
@@ -32,7 +33,8 @@ $(function () {
         
         $('#DC_V').highcharts({
             chart: {
-                type: 'spline'
+                type: 'spline',
+                zoomType: 'xy'
             },
             title: {
                 text: 'DC Voltage'
@@ -62,7 +64,8 @@ $(function () {
         
         $('#EFF').highcharts({
             chart: {
-                type: 'spline'
+                type: 'spline',
+                zoomType: 'xy'
             },
             title: {
                 text: 'EFFICIENCY'
@@ -94,7 +97,8 @@ $(function () {
         
         $('#OHM').highcharts({
             chart: {
-                type: 'spline'
+                type: 'spline',
+                zoomType: 'xy'
             },
             title: {
                 text: 'Resistance DC'
