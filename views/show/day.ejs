@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Danfoss <%= title %></title>
+    <script type="text/javascript" src="/javascripts/external/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="/javascripts/external/highcharts/highcharts.js"></script>
+    <script type="text/javascript" src="/javascripts/highchart_day.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>Show <%= title %></h1>
+    <div id="DC_P"></div>
+    <div id="DC_V"></div>
+    <div id="EFF"></div>
+    <div id="OHM"></div>
+    <ul>
+
+    </ul>
+    <script type="text/javascript">
+      var S = <%- day_json %>;
+    </script>
+  </body>
+</html>

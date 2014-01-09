@@ -1,0 +1,1 @@
+This can handle the log files from Danfoss TLX Pro Portal-Upload. It displays the data on the browser and serves it as Sunny Explorer CSV which in turn can be used by sunwatcherapp.sineta.de  

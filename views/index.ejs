@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <div class="block">
+    <% dates.forEach(function(d){ %>
+    <span><a href="show/<%= d %>"><%= d %></a> (<a href="sma/<%= d %>.csv">csv</a>)</span>
+    <% }) %>
+    </div>
+  </body>
+</html>

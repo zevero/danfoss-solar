@@ -1,0 +1,13 @@
+Angaben zur CSV-Datei; SMA SunnyExplorerer CSV <%= title %>
+Leere Zeile
+;Name des Geraets1;Name des Geraets2
+;Modell des Geraets1;Modell des Geraets2
+;Seriennummer des Geraets1;Seriennummer des Geraets2
+;W;W
+Zeitformat;W;W
+
+<% var m; while(m = day.next()){ %><%= m('TIMESTAMP') %>;<%= Math.round(m('U_DC_1') * m('I_DC_1')) %>;<%= Math.round(m('U_DC_2') * m('I_DC_2')) %>
+<% } %>
+
+
+
