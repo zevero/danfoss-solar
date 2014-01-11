@@ -1,4 +1,10 @@
 $(function () {
+  Highcharts.setOptions({
+   global: {
+    timezoneOffset: 1
+   }
+  });
+  
   var charts = {};
         var E = Math.round(1000*(S.DC_E[0]+S.DC_E[1]+S.DC_E[2]))/1000,
             eff = Math.round(S.E/E*10000)/100;
