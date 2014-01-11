@@ -1,6 +1,6 @@
 {
   "name": "danfoss-solar",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": false,
   "scripts": {
     "start": "nodemon -e js,css,html,json,jade app.js"
@@ -14,7 +14,7 @@
     "nodemon": "*"
   },
   "keywords": [
-    "Danfoss", "TLX", "csv", "Sunny Explorer", "SMA", "solar"
+    "Danfoss", "TLX", "csv", "Sunny Beam", "SunnyBeam", "SMA", "solar"
   ],  "homepage": "https://github.com/zevero/danfoss-solar.git",
   "keywords": [
     "kostal"
@@ -23,8 +23,8 @@
     "type": "git",
     "url": "https://github.com/zevero/danfoss-solar.git"
   },
-  "readme": "This can handle the log files from Danfoss TLX Pro Portal-Upload. It displays the data on the browser and serves it as Sunny Explorer CSV which in turn can be used by sunwatcherapp.sineta.de  \n",
+  "readme": "This can handle the log files from Danfoss TLX Pro Portal-Upload. It displays the data on the browser and serves it as SunnyBeam CSV which in turn can be used by sunwatcherapp.sineta.de  \n",
   "readmeFilename": "README.md",
-  "description": "This can handle the log files from Danfoss TLX Pro Portal-Upload. It displays the data on the browser and serves it as Sunny Explorer CSV which in turn can be used by sunwatcherapp.sineta.de  "
+  "description": "This can handle the log files from Danfoss TLX Pro Portal-Upload. It displays the data on the browser and serves it as SunnyBeam CSV which in turn can be used by sunwatcherapp.sineta.de  "
 
 }

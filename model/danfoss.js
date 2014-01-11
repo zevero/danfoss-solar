@@ -19,7 +19,7 @@ var D = {
   minutes4day: function(date){
     var minutes=[];
     var files = fs.readdirSync(path); 
-   
+    date = date.replace(/-/g, '');
     files.filter(function(file) { return file.substr(0,prefix.length+6) === prefix+date; })
     .forEach(function(file) {
       var skip = 6;
@@ -35,7 +35,12 @@ var D = {
   },
   day: function(date){
     var minutes = D.minutes4day(date);
+     var string = [1,2,3].map(function(i){ //test for string data
+          var positive = function(m){return (D.X(m,'I_DC_'+i)>0);};
+          return minutes.some(positive);
+        });
     var i=0;
+    if (!minutes.length) return false; //nothing found
     return {
         next: function(){
           if (minutes.length<=i) {
@@ -46,8 +51,9 @@ var D = {
           return function(val){
             return D.X(m,val);
           };
-        }
-      
+        },
+        date_ger: date.slice(6,8)+'.'+date.slice(3,5)+'.20'+date.slice(0,2),
+        string: string
     };
   },
   day_json: function(date){
@@ -64,6 +70,7 @@ var D = {
         E: D.X(minutes[minutes.length-1],'E_DAY'),
         t_start: t_start,
         n: minutes.length,
+        //Serial: D.X(minutes[0],'SERIAL'),
         OK: true
       };
       while(++i<minutes.length){
@@ -110,10 +117,13 @@ var D = {
    dates: function(){
      console.log(path);
      var dates = [],
-         files = fs.readdirSync(path); 
+         files = fs.readdirSync(path);
+     String.prototype.splice = function( idx, rem, s ) {
+       return (this.slice(0,idx) + s + this.slice(idx + Math.abs(rem)));
+     };
      files.filter(function(file) { return file.substr(0,prefix.length) === prefix; })
        .forEach(function(date) {
-         dates.push(date.slice(prefix.length,-6));
+         dates.push(date.slice(prefix.length,-6).splice( 4, 0, "-" ).splice( 2, 0, "-" ));
        });
      dates = dates.filter(unique);
      dates.sort();

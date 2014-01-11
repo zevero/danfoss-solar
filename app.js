@@ -30,7 +30,7 @@ if ('development' === app.get('env')) {
 }
 
 app.get('/',routes.index);
-app.get('/sma/:date.csv', routes.sma);
+app.get('/sma/:date.CSV', routes.sma);
 app.get('/show/:date', routes.show.day);
 
 http.createServer(app).listen(app.get('port'), function(){
