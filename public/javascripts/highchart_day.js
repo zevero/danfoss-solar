@@ -1,7 +1,7 @@
 $(function () {
   Highcharts.setOptions({
    global: {
-    timezoneOffset: 1
+    useUTC: false
    }
   });
   
