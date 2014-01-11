@@ -1,5 +1,8 @@
 $(function () {
-        $('body>h1').append(' ' + S.E + ' kWh');
+  var charts = {};
+        var E = Math.round(1000*(S.DC_E[0]+S.DC_E[1]+S.DC_E[2]))/1000,
+            eff = Math.round(S.E/E*10000)/100;
+        $('body>h2').append(' # ' + S.DC_E[0] +' + ' + S.DC_E[1] +' + ' + S.DC_E[2] + ' = ' + E +  'kWh η=' + eff + ' → ' + S.E + 'kWh ' + (S.OK?'OK':'NOK'));
   
         $('#DC_P').highcharts({
             chart: {
@@ -28,7 +31,12 @@ $(function () {
                         Highcharts.dateFormat('%H:%M', this.x) +' → '+ this.y +' W';
                 }
             },
-            
+            plotOptions: {
+              series: {
+                pointInterval: 60 * 1000,
+                pointStart: S.t_start
+              }
+            },
             series: S.DC_P
         });
         
@@ -59,6 +67,12 @@ $(function () {
                         return '<b>'+ this.series.name +'</b><br/>'+
                         Highcharts.dateFormat('%H:%M', this.x) +' → '+ this.y +' V';
                 }
+            },
+            plotOptions: {
+              series: {
+                pointInterval: 60 * 1000,
+                pointStart: S.t_start
+              }
             },
             
             series: S.DC_V
@@ -95,6 +109,12 @@ $(function () {
                         Highcharts.dateFormat('%H:%M', this.x) +' → '+ this.y +' %';
                 }
             },
+            plotOptions: {
+              series: {
+                pointInterval: 60 * 1000,
+                pointStart: S.t_start
+              }
+            },
             
             series: S.EFF
         });
@@ -129,6 +149,12 @@ $(function () {
                         return '<b>'+ this.series.name +'</b><br/>'+
                         Highcharts.dateFormat('%H:%M', this.x) +' → '+ this.y +' °C';
                 }
+            },
+            plotOptions: {
+              series: {
+                pointInterval: 60 * 1000,
+                pointStart: S.t_start
+              }
             },
             
             series: S.T
@@ -166,7 +192,21 @@ $(function () {
                         Highcharts.dateFormat('%H:%M', this.x) +' → '+ this.y +' Ω';
                 }
             },
+            plotOptions: {
+              series: {
+                pointInterval: 60 * 1000,
+                pointStart: S.t_start
+              }
+            },
             
             series: S.OHM
+        });
+        
+        
+        //Hide all Strings, which have no Data
+        ['#DC_P','#DC_V'].forEach(function(id){
+          [0,1,2].forEach(function(s){
+            if (!S.DC_E[s]) $(id).highcharts().series[s].hide();
+          });
         });
     });

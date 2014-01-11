@@ -52,52 +52,58 @@ var D = {
   },
   day_json: function(date){
     var minutes = D.minutes4day(date);
-    var i=0,m, t, s, p, v, p_dc, eff, S={
-        DC_P: [],
-        DC_V: [],
+    var i=-1,m, t, tl, s, p, v, p_dc, eff,
+        t_start = new Date(D.X(minutes[0],'TIMESTAMP')).getTime(),
+        S={
+        DC_E:[0, 0, 0],
+        DC_P: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
+        DC_V: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
         EFF: [{ name: 'Efficiency', data: []}],
         OHM: [{ name: 'Resistance DC [Ω]', data: []}],
         T: [{ name: 'Temperature [°C]', data: []}],
-        E: 0
-        };
-      while(i<minutes.length){
-        m = minutes[i++];
+        E: D.X(minutes[minutes.length-1],'E_DAY'),
+        t_start: t_start,
+        n: minutes.length,
+        OK: true
+      };
+      while(++i<minutes.length){
+        m = minutes[i];
         t = new Date(D.X(m,'TIMESTAMP')).getTime();
         p_dc=0;
-        for (s=1; s<=3; s++){
+        for (s=1; s<=3; s++){//3 Strings
           v = D.X(m,'U_DC_'+s)*1;
           
           //POWER
           p = v * D.X(m,'I_DC_'+s)*1;
-          if (p) {
-            p_dc += p;
-            if (!S.DC_P[s-1]) S.DC_P[s-1]= { name: 'String '+s, data: []};
-            S.DC_P[s-1].data.push([t,Math.round(p)]);
-          }
-          
-          //VOLTAGE
-          if (v) {
-            if (!S.DC_V[s-1]) S.DC_V[s-1]= { name: 'String '+s, data: []};
-            S.DC_V[s-1].data.push([t,v]);
-          }
+          p_dc += p;
+          S.DC_P[s-1].data[i] = Math.round(p);
 
           
+          //VOLTAGE  
+          S.DC_V[s-1].data[i]=v;
           
           
+          //Energy
+          S.DC_E[s-1]+=p/60;
         };
-        //ENERGY_AC
-        S.E = D.X(m,'E_DAY');
+
         
         //EFFICIENCY
         eff = Math.round(D.X(m,'P_AC')/p_dc*10000)/100;
-        if (eff) S.EFF[0].data.push([t,eff]);
+        S.EFF[0].data[i]=eff;
         
         //TEMPERATURE
-        S.T[0].data.push([t,D.X(m,'T_WR')*1]); 
+        S.T[0].data[i]=D.X(m,'T_WR')*1; 
         //OHM
-        S.OHM[0].data.push([t,D.X(m,'R_DC')*1]);
+        S.OHM[0].data[i]=D.X(m,'R_DC')*1;
 
       };
+ 
+      S.DC_E = S.DC_E.map(function(v){return Math.round(v)/1000;});
+      
+      S.t_stop = t;
+      if (t!==t_start+60*1000*(minutes.length-1)) S.OK = false;
+       //console.log(S.OK,t,t_start+60*1000*minutes.length);
       return JSON.stringify(S);
    },
    
