@@ -19,3 +19,7 @@ I still don't know the actual format of SMA SunnyBeam CSV. I am looking for a sa
 ## Where is it testes?
 
 It runs on a Raspberry Pi B and uses Data from a Danfoss TLX Pro + 15K
+
+## Tips
+
+Place your data (from the data-samples) folder into the data folder. Maybe you have to adjust prefix or path in model/danfoss.js.
