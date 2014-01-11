@@ -1,1 +1,0 @@
-Place your data or the sample data into this directory

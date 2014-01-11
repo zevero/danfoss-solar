@@ -22,4 +22,4 @@ It runs on a Raspberry Pi B and uses Data from a Danfoss TLX Pro + 15K
 
 ## Tips
 
-Place your data (from the data-samples) folder into the data folder. Maybe you have to adjust prefix or path in model/danfoss.js.
+Place your data into a folder named data (or rename the data-samples folder). Maybe you have to adjust prefix or path in model/danfoss.js.
