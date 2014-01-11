@@ -8,14 +8,23 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h2>Danfoss Solar <%= title %></h2>
+    <h2>
+      <a href="<%= S.t_yesterday %>">&larr;</a> 
+      <% if (S.t_tomorrow) { %><a href="<%= S.t_tomorrow %>">&rarr;</a> <% } %>
+      Danfoss Solar <%= title %>
+       # <%=S.DC_E[0]%> <%=S.DC_E[1]%> <%=S.DC_E[2]%>  =
+       <%var E = Math.round(1000*(S.DC_E[0]+S.DC_E[1]+S.DC_E[2]))/1000%>
+       <%= E %>kWh
+       η= <%=Math.round(S.E/E*10000)/100%>
+       → <%=S.E%>kWh <%=(S.OK?'OK':'NOK')%>
+    </h2>
     <div id="DC_P"></div>
     <div id="DC_V"></div>
     <div id="EFF"></div>
     <div id="T"></div>
     <div id="OHM"></div>
     <script type="text/javascript">
-      var S = <%- day_json %>;
+      var S = <%- JSON.stringify(S) %>;
     </script>
   </body>
 </html>

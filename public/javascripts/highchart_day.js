@@ -6,10 +6,6 @@ $(function () {
   });
   
   var charts = {};
-        var E = Math.round(1000*(S.DC_E[0]+S.DC_E[1]+S.DC_E[2]))/1000,
-            eff = Math.round(S.E/E*10000)/100;
-        $('body>h2').append(' # ' + S.DC_E[0] +' + ' + S.DC_E[1] +' + ' + S.DC_E[2] + ' = ' + E +  'kWh η=' + eff + ' → ' + S.E + 'kWh ' + (S.OK?'OK':'NOK'));
-  
         $('#DC_P').highcharts({
             chart: {
                 type: 'spline',

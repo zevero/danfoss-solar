@@ -56,11 +56,13 @@ var D = {
         string: string
     };
   },
-  day_json: function(date){
+  day_highchart: function(date){
     var minutes = D.minutes4day(date);
     var i=-1,m, t, tl, s, p, v, p_dc, eff,
         t_start = new Date(D.X(minutes[0],'TIMESTAMP')).getTime(),
-        S={
+        t_y = new Date(t_start - 24*3600*1000),
+        t_t = new Date(t_start + 24*3600*1000),
+      S={
         DC_E:[0, 0, 0],
         DC_P: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
         DC_V: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
@@ -69,8 +71,9 @@ var D = {
         T: [{ name: 'Temperature [°C]', data: []}],
         E: D.X(minutes[minutes.length-1],'E_DAY'),
         t_start: t_start,
+        t_yesterday: t_y.toISOString().slice(2,10),
+        t_tomorrow: (t_t < new Date())?t_t.toISOString().slice(2,10):false,
         n: minutes.length,
-        //Serial: D.X(minutes[0],'SERIAL'),
         OK: true
       };
       while(++i<minutes.length){
@@ -111,7 +114,7 @@ var D = {
       S.t_stop = t;
       if (t!==t_start+60*1000*(minutes.length-1)) S.OK = false;
        //console.log(S.OK,t,t_start+60*1000*minutes.length);
-      return JSON.stringify(S);
+      return S;
    },
    
    dates: function(){
@@ -138,8 +141,8 @@ module.exports = {
   day: function(date){
     return D.day(date);
   },
-  day_json: function(date){
-     return D.day_json(date);
+  day_highchart: function(date){
+     return D.day_highchart(date);
   },
   dates: function(){
      return D.dates();
