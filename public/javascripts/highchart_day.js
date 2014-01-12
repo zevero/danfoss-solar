@@ -4,9 +4,8 @@ $(function () {
     useUTC: false
    }
   });
-  
-  var charts = {};
-        $('#DC_P').highcharts({
+ 
+        var O_P = {
             chart: {
                 type: 'spline',
                 zoomType: 'xy'
@@ -36,12 +35,45 @@ $(function () {
             plotOptions: {
               series: {
                 pointInterval: 60 * 1000,
-                pointStart: S.t_start
+                pointStart: S.t_start,
+                stacking: null
               }
             },
+            labels: {
+              items: [{
+                html: 'Stack',
+                style: {
+                  left: '550px',
+                  top: '328px',
+                  'font-size': '18px',
+                  cursor: 'pointer'
+                }
+              }]
+            },
             series: S.DC_P
-        });
+        };
         
+        var start = function(){ //Add Stacking / Unstacking for DC_P Chart
+          if ($('#DC_P').highcharts())  $('#DC_P').highcharts().destroy();
+          $('#DC_P').empty().highcharts(O_P);
+          //console.log(O_P);
+          var stacking = O_P.plotOptions.series.stacking;
+          //if (stack==='normal') O_P.plotOptions.series.stack='percent';
+          //if (!stack) O_P.plotOptions.series.stack='normal';
+          if (stacking==='percent') {
+            O_P.plotOptions.series.stacking=null;
+            O_P.chart.type = "spline";
+          }
+          else {
+            O_P.plotOptions.series.stacking='percent';
+            O_P.chart.type = "area";
+          }
+          $('#DC_P tspan:contains("Stack")').on('click',start);
+        };
+         start();
+        
+        
+
         
         $('#DC_V').highcharts({
             chart: {
@@ -248,4 +280,7 @@ $(function () {
             if (!S.DC_E[s]) $(id).highcharts().series[s].hide();
           });
         });
+        
+
+        
     });
