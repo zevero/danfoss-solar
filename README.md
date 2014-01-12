@@ -8,17 +8,12 @@ Read Danfoss TLX Pro Portal-Upload Data, present it in the browser and convert i
 
 ## Feature 2 - Get your Data in SMA SunnyBeam CSV
 
-String Data shall be included so that it works with [sunwatcherapp.sineta.de](sunwatcherapp.sineta.de)
-
-
-## Downsides
-
-I still don't know the actual format of SMA SunnyBeam CSV. I am looking for a sample-file
+String Data is included so that it works with [sunwatcherapp.sineta.de](sunwatcherapp.sineta.de)
 
 
 ## Where is it testes?
 
-It runs on a Raspberry Pi B and uses Data from a Danfoss TLX Pro + 15K
+It runs on my Raspberry Pi B and my Linux Computer and uses Data from a Danfoss TLX Pro + 15K
 
 ## Tips
 

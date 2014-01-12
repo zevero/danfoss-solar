@@ -53,13 +53,10 @@ $(function () {
             series: S.DC_P
         };
         
-        var start = function(){ //Add Stacking / Unstacking for DC_P Chart
+        var start = function(){ //Add percent Stacking 
           if ($('#DC_P').highcharts())  $('#DC_P').highcharts().destroy();
           $('#DC_P').empty().highcharts(O_P);
-          //console.log(O_P);
           var stacking = O_P.plotOptions.series.stacking;
-          //if (stack==='normal') O_P.plotOptions.series.stack='percent';
-          //if (!stack) O_P.plotOptions.series.stack='normal';
           if (stacking==='percent') {
             O_P.plotOptions.series.stacking=null;
             O_P.chart.type = "spline";
