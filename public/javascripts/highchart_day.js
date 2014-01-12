@@ -80,6 +80,43 @@ $(function () {
             series: S.DC_V
         });
         
+        $('#DC_I').highcharts({
+            chart: {
+                type: 'spline',
+                zoomType: 'xy'
+            },
+            title: {
+                text: 'DC Current'
+            },
+            xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: {
+                    month: '%e. %b',
+                    year: '%b'
+                }
+            },
+            yAxis: {
+                title: {
+                    text: 'Current [A]'
+                },
+                min: 0
+            },
+            tooltip: {
+                formatter: function() {
+                        return '<b>'+ this.series.name +'</b><br/>'+
+                        Highcharts.dateFormat('%H:%M', this.x) +' → '+ this.y +' A';
+                }
+            },
+            plotOptions: {
+              series: {
+                pointInterval: 60 * 1000,
+                pointStart: S.t_start
+              }
+            },
+            
+            series: S.DC_I
+        });
+        
         $('#EFF').highcharts({
             chart: {
                 type: 'spline',
@@ -206,7 +243,7 @@ $(function () {
         
         
         //Hide all Strings, which have no Data
-        ['#DC_P','#DC_V'].forEach(function(id){
+        ['#DC_P','#DC_V','#DC_I'].forEach(function(id){
           [0,1,2].forEach(function(s){
             if (!S.DC_E[s]) $(id).highcharts().series[s].hide();
           });

@@ -58,7 +58,7 @@ var D = {
   },
   day_highchart: function(date){
     var minutes = D.minutes4day(date);
-    var i=-1,m, t, tl, s, p, v, p_dc, eff,
+    var i=-1,m, t, tl, s, p, V, I, p_dc, eff,
         t_start = new Date(D.X(minutes[0],'TIMESTAMP')).getTime(),
         t_y = new Date(t_start - 24*3600*1000),
         t_t = new Date(t_start + 24*3600*1000),
@@ -66,6 +66,7 @@ var D = {
         DC_E:[0, 0, 0],
         DC_P: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
         DC_V: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
+        DC_I: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
         EFF: [{ name: 'Efficiency', data: []}],
         OHM: [{ name: 'Resistance DC [Ω]', data: []}],
         T: [{ name: 'Temperature [°C]', data: []}],
@@ -81,16 +82,21 @@ var D = {
         t = new Date(D.X(m,'TIMESTAMP')).getTime();
         p_dc=0;
         for (s=1; s<=3; s++){//3 Strings
-          v = D.X(m,'U_DC_'+s)*1;
+          V = D.X(m,'U_DC_'+s)*1;
+          I = D.X(m,'I_DC_'+s)*1;
+          
           
           //POWER
-          p = v * D.X(m,'I_DC_'+s)*1;
+          p = V * I;
           p_dc += p;
           S.DC_P[s-1].data[i] = Math.round(p);
 
           
           //VOLTAGE  
-          S.DC_V[s-1].data[i]=v;
+          S.DC_V[s-1].data[i]=V;
+          
+          //CURRENT  
+          S.DC_I[s-1].data[i]=I;
           
           
           //Energy
