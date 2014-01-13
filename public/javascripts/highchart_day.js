@@ -52,7 +52,18 @@ $(function () {
         pointStart: S.t_start
       }
     },
+    tooltip: {
+            shared: true,
+            crosshairs: true
+        }
   });
+  var formatter = function(unit) {
+    var s='<b>'+Highcharts.dateFormat('%H:%M', this.x) + '<br/>';
+    this.points.forEach(function(point){
+      s += '<b>'+ point.series.name +'</b> → '+ point.y +' '+ unit +'<br/>';
+    });
+    return s;
+  };
  
   var O_P = {
     title: {
@@ -64,10 +75,14 @@ $(function () {
       },
       min: 0
     },
-    tooltip: {
+   tooltip: {
       formatter: function() {
-        return '<b>'+ this.series.name +'</b><br/>'+
-        Highcharts.dateFormat('%H:%M', this.x) +' → '+ this.y +' W';
+        var s='',t=0;
+        this.points.forEach(function(point){t+=point.y;});
+        this.points.forEach(function(point){
+          s += '<b>'+ point.series.name +'</b> → '+ point.y +' W('+ Math.round(point.y/t*100)+'%)'+'<br/>';
+        });
+        return '<b>'+Highcharts.dateFormat('%H:%M', this.x) + '</b> →→ '+ t +' W(100%)<br/>' + s;
       }
     },
     plotOptions: { series: { stacking: null }},
@@ -114,11 +129,8 @@ $(function () {
       },
       min: 0
     },
-    tooltip: {
-      formatter: function() {
-        return '<b>'+ this.series.name +'</b><br/>'+
-        Highcharts.dateFormat('%H:%M', this.x) +' → '+ this.y +' V';
-      }
+   tooltip: {
+      formatter:  function(){return formatter.call(this,'V');}
     },
     series: S.DC_V
   });
@@ -133,11 +145,8 @@ $(function () {
       },
       min: 0
     },
-    tooltip: {
-      formatter: function() {
-        return '<b>'+ this.series.name +'</b><br/>'+
-        Highcharts.dateFormat('%H:%M', this.x) +' → '+ this.y +' mA';
-      }
+   tooltip: {
+      formatter:  function(){return formatter.call(this,'mA');}
     },
     series: S.DC_I
   });
@@ -156,11 +165,8 @@ $(function () {
     legend: {
       enabled: false
     },
-    tooltip: {
-      formatter: function() {
-        return '<b>'+ this.series.name +'</b><br/>'+
-        Highcharts.dateFormat('%H:%M', this.x) +' → '+ this.y +' %';
-      }
+   tooltip: {
+      formatter:  function(){return formatter.call(this,'%');}
     },
     series: S.EFF
   });
@@ -179,11 +185,8 @@ $(function () {
     legend: {
       enabled: false
     },
-    tooltip: {
-      formatter: function() {
-        return '<b>'+ this.series.name +'</b><br/>'+
-        Highcharts.dateFormat('%H:%M', this.x) +' → '+ this.y +' °C';
-      }
+   tooltip: {
+      formatter:  function(){return formatter.call(this,'°C');}
     },
     series: S.T
   });
