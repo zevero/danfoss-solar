@@ -59,6 +59,7 @@ var D = {
   day_highchart: function(date){
     var minutes = D.minutes4day(date);
     var i=-1,m, t, tl, s, p, V, I, p_dc, eff,
+        m_last = minutes[minutes.length-1],
         t_start = new Date(D.X(minutes[0],'TIMESTAMP')).getTime(),
         t_y = new Date(t_start - 24*3600*1000),
         t_t = new Date(t_start + 24*3600*1000),
@@ -68,9 +69,9 @@ var D = {
         DC_V: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
         DC_I: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
         EFF: [{ name: 'Efficiency', data: []}],
-        OHM: [{ name: 'Resistance DC [Ω]', data: []}],
         T: [{ name: 'Temperature [°C]', data: []}],
-        E: D.X(minutes[minutes.length-1],'E_DAY'),
+        E: D.X(m_last,'E_DAY'),
+        OHM: Math.round(D.X(m_last,'R_DC')/1000),
         t_start: t_start,
         t_yesterday: t_y.toISOString().slice(2,10),
         t_tomorrow: (t_t < new Date())?t_t.toISOString().slice(2,10):false,
@@ -83,14 +84,16 @@ var D = {
         p_dc=0;
         for (s=1; s<=3; s++){//3 Strings
           V = D.X(m,'U_DC_'+s)*1;
-          I = D.X(m,'I_DC_'+s)*1;
+          I = D.X(m,'I_DC_'+s)*1000;
           
           
-          //POWER
-          p = V * I;
-          p_dc += p;
-          S.DC_P[s-1].data[i] = Math.round(p);
+          //POWER is done client side
+          p =  V*I;
+          p_dc +=p;
+          //S.DC_P[s-1].data[i] = Math.round(V*I/1000); //is done on client
 
+          //Energy
+          S.DC_E[s-1]+=p/60;
           
           //VOLTAGE  
           S.DC_V[s-1].data[i]=V;
@@ -99,8 +102,6 @@ var D = {
           S.DC_I[s-1].data[i]=I;
           
           
-          //Energy
-          S.DC_E[s-1]+=p/60;
         };
 
         
@@ -110,8 +111,6 @@ var D = {
         
         //TEMPERATURE
         S.T[0].data[i]=D.X(m,'T_WR')*1; 
-        //OHM
-        S.OHM[0].data[i]=D.X(m,'R_DC')*1;
 
       };
  
