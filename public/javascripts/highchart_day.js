@@ -64,16 +64,19 @@ $(function () {
     var stacking = O_P.plotOptions.series.stacking;
     if (stacking==='percent') {
       O_P.title.text= 'DC Power - per String (Click this title for normal stacking)';
+      O_P.yAxis.title.text='Watt [W]';
       O_P.plotOptions.series.stacking=null;
       O_P.chart.type = "spline";
     }
     else if (stacking==='normal') {
-      O_P.title.text= 'DC Power - stacked (Click this title for percent stacking)';
+      O_P.title.text= 'DC Power - % stacked (Click this title to unstack)';
+      O_P.yAxis.title.text='Watt [%]';
       O_P.plotOptions.series.stacking='percent';
       O_P.chart.type = "area";
     }
     else if (stacking===null){
-      O_P.title.text= 'DC Power - percent stacked (Click this title to unstack)';
+      O_P.title.text= 'DC Power - stacked (Click this title for percent stacking)';
+      O_P.yAxis.title.text='Watt [W]';
       O_P.plotOptions.series.stacking='normal';
       O_P.chart.type = "area";
     }
