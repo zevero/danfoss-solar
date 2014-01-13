@@ -13,10 +13,26 @@ $(function () {
      '#2266bb', 
      '#001188'
     ],
-    chart: {
-       type: 'spline',
-       zoomType: 'xy'
-    },
+        chart: {
+           type: 'spline',
+           zoomType: 'xy',    
+           events: {
+              click: function (e) {
+                console.log(e);
+                for(var i=0;i<Highcharts.charts.length;i++){
+                  var chart = Highcharts.charts[i];
+                  if (!chart) continue;
+                  chart.xAxis[0].removePlotLine();
+                  chart.xAxis[0].addPlotLine({
+                    color: 'red',
+                    dashStyle: 'dot',
+                    width: 2,
+                    value: e.xAxis[0].value
+                  });
+                }
+              }
+            }
+        },
     xAxis: {
       type: 'datetime',
       dateTimeLabelFormats: { 
@@ -35,7 +51,7 @@ $(function () {
         pointInterval: 60 * 1000,
         pointStart: S.t_start
       }
-    }
+    },
   });
  
   var O_P = {
@@ -59,7 +75,7 @@ $(function () {
   };
    
   var start = function(){ //Add percent Stacking 
-    //if ($('#DC_P').highcharts())  $('#DC_P').highcharts().destroy();
+    if ($('#DC_P').highcharts())  $('#DC_P').highcharts().destroy();
     $('#DC_P').empty().highcharts(O_P);
     var stacking = O_P.plotOptions.series.stacking;
     if (stacking==='percent') {
