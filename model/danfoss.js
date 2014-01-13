@@ -88,7 +88,7 @@ var D = {
           
           
           //POWER is done client side
-          p =  V*I;
+          p =  V*I/1000;
           p_dc +=p;
           //S.DC_P[s-1].data[i] = Math.round(V*I/1000); //is done on client
 
@@ -105,7 +105,7 @@ var D = {
         };
 
         
-        //EFFICIENCY
+        //EFFICIENCY //done client side
         eff = Math.round(D.X(m,'P_AC')/p_dc*10000)/100;
         S.EFF[0].data[i]=eff;
         

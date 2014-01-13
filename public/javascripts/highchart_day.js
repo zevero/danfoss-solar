@@ -1,14 +1,9 @@
 $(function () {
-  console.log('huhu');
-  console.log(S);
-  console.time('Highcharts Render Time');
-  console.time('Calc P');
   for(var s=0;s<S.DC_V.length;s++){
     for(var i=0;i<S.DC_V[s].data.length;i++){
       S.DC_P[s].data[i] = Math.round(S.DC_V[s].data[i]*S.DC_I[s].data[i]/1000);
     }
   }
-  console.timeEnd('Calc P');
   Highcharts.setOptions({
     global: {
       useUTC: false
@@ -64,8 +59,6 @@ $(function () {
   };
    
   var start = function(){ //Add percent Stacking 
-    console.timeStamp("Adding result");
-    console.time('st');
     //if ($('#DC_P').highcharts())  $('#DC_P').highcharts().destroy();
     $('#DC_P').empty().highcharts(O_P);
     var stacking = O_P.plotOptions.series.stacking;
@@ -86,7 +79,6 @@ $(function () {
     }
 
    $('text.highcharts-title').click(start);
-    console.timeEnd('st');
   };
   start();
 
@@ -183,6 +175,4 @@ $(function () {
         if (!S.DC_E[s]) $(id).highcharts().series[s].hide();
       });
     });
-
- console.timeEnd('Highcharts Render Time');
 });
