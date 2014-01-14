@@ -12,7 +12,7 @@ var D = {
     });
     return function(m,val){
       var col = table[val];
-      if (col === undefined) throw new Error('Danfoss: Val not found');
+      if (col === undefined) throw new Error('Danfoss: Val "'+val+'" not found');
       return m[col];
     };
   }()),
@@ -39,21 +39,34 @@ var D = {
           var positive = function(m){return (D.X(m,'I_DC_'+i)>0);};
           return minutes.some(positive);
         });
-    var i=0;
+    var i=0, m_last = minutes[minutes.length-1], E_DC;
     if (!minutes.length) return false; //nothing found
+
     return {
-        next: function(){
-          if (minutes.length<=i) {
-            return false;
-          }
-          var m = minutes[i++];
-          
-          return function(val){
-            return D.X(m,val);
-          };
-        },
-        date_ger: date.slice(6,8)+'.'+date.slice(3,5)+'.20'+date.slice(0,2),
-        string: string
+       next: function(){
+        if (minutes.length<=i) {
+          return false;
+        }
+        var m = minutes[i++];
+        var p_dc=0, eff;
+        for(var s=1;s<3;s++) { p_dc+= D.X(m,'I_DC_'+s) * D.X(m,'U_DC_'+s); }
+        eff = (p_dc)? D.X(m,'P_AC')/p_dc:false ;
+        return function(val){
+           switch (val) {
+            case "P_AC_1":
+            case "P_AC_2":
+            case "P_AC_3":
+              var s= val.slice(5);
+              var p = (eff)?Math.round(eff * D.X(m,'I_DC_'+s) * D.X(m,'U_DC_'+s))/1000:0;
+              return p;
+            default:
+              return D.X(m,val);
+           }
+         };
+       },
+       date_ger: date.slice(6,8)+'.'+date.slice(3,5)+'.20'+date.slice(0,2),
+       string: string,
+       E: D.X(m_last,'E_DAY')
     };
   },
   day_highchart: function(date){
@@ -76,6 +89,7 @@ var D = {
         t_yesterday: t_y.toISOString().slice(2,10),
         t_tomorrow: (t_t < new Date())?t_t.toISOString().slice(2,10):false,
         n: minutes.length,
+        AC_E: D.X(m_last,'E_DAY'),
         OK: true
       };
       while(++i<minutes.length){

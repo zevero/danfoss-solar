@@ -5,5 +5,5 @@ Version CSV|Tool SunnyBeam2|Linebreaks CR/LF|Delimiter semicolon|Decimalpoint co
 <%=(day.string[0])?';'+m('SERIAL')+'-1':''%><%=(day.string[1])?';'+m('SERIAL')+'-2':''%><%=(day.string[2])?';'+m('SERIAL')+'-3':''%>
 time<%=(day.string[0])?';Power':''%><%=(day.string[1])?';Power':''%><%=(day.string[2])?';Power':''%>
 HH:mm<%=(day.string[0])?';kW':''%><%=(day.string[1])?';kW':''%><%=(day.string[2])?';kW':''%>
-<% do { %><%= m('TIMESTAMP').slice(11,16) %><%=(day.string[0])?';'+Math.round(m('U_DC_1') * m('I_DC_1'))/1000:''%><%=(day.string[1])?';'+Math.round(m('U_DC_2') * m('I_DC_2'))/1000:''%><%=(day.string[2])?';'+Math.round(m('U_DC_3') * m('I_DC_3'))/1000:''%>
+<% do { %><%= m('TIMESTAMP').slice(11,16) %><%=(day.string[0])?';'+m('P_AC_1'):''%><%=(day.string[1])?';'+m('P_AC_2'):''%><%=(day.string[2])?';'+m('P_AC_3'):''%>
 <% } while(m = day.next()) %>
