@@ -12,12 +12,13 @@
       <a href="<%= S.t_yesterday %>">&larr;</a> 
       <% if (S.t_tomorrow) { %><a href="<%= S.t_tomorrow %>">&rarr;</a> <% } %>
       Danfoss Solar <%= title %>
-       # <%=S.DC_E[0]%> <%=S.DC_E[1]%> <%=S.DC_E[2]%>  =
-       <%var E = Math.round(1000*(S.DC_E[0]+S.DC_E[1]+S.DC_E[2]))/1000%>
+      # <%=S.DC_E[0]%> <small><%=S.DC_E_perc(0)%>%</small> <%=S.DC_E[1]%> <small><%=S.DC_E_perc(1)%>%</small> <%=S.DC_E[2]%> <small><%=S.DC_E_perc(2)%>%</small>  =
+       <%var E = Math.round(1000*(S.DC_E_tot))/1000%>
        <%= E %>kWh
        η= <%=Math.round(S.E/E*10000)/100%>
        → <%=S.E%>kWh <%=(S.OK?'OK':'NOK')%> <%=S.OHM%>MΩ 
     </h2>
+    <div id="clickstats"></div>
     <div id="DC_P"></div>
     <div id="DC_V"></div>
     <div id="DC_I"></div>

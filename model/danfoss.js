@@ -78,13 +78,14 @@ var D = {
         t_t = new Date(t_start + 24*3600*1000),
       S={
         DC_E:[0, 0, 0],
+        DC_E_tot: 0,
         DC_P: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
         DC_V: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
         DC_I: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
         EFF: [{ name: 'Efficiency', data: []}],
         T: [{ name: 'Temperature [°C]', data: []}],
         E: D.X(m_last,'E_DAY'),
-        OHM: Math.round(D.X(m_last,'R_DC')/1000),
+        OHM: -1,
         t_start: t_start,
         t_yesterday: t_y.toISOString().slice(2,10),
         t_tomorrow: (t_t < new Date())?t_t.toISOString().slice(2,10):false,
@@ -100,7 +101,6 @@ var D = {
           V = D.X(m,'U_DC_'+s)*1;
           I = D.X(m,'I_DC_'+s)*1000;
           
-          
           //POWER is done client side
           p =  V*I/1000;
           p_dc +=p;
@@ -114,11 +114,11 @@ var D = {
           
           //CURRENT  
           S.DC_I[s-1].data[i]=I;
-          
-          
         };
 
-        
+        //OHM (sometimes 0 id no p, so we look for a more interesting value)
+        if (p_dc>0) S.OHM = Math.round(D.X(m,'R_DC')/1000);
+          
         //EFFICIENCY //done client side
         eff = Math.round(D.X(m,'P_AC')/p_dc*10000)/100;
         S.EFF[0].data[i]=eff;
@@ -129,7 +129,8 @@ var D = {
       };
  
       S.DC_E = S.DC_E.map(function(v){return Math.round(v)/1000;});
-      
+      S.DC_E_tot = S.DC_E[0] + S.DC_E[1] + S.DC_E[2];
+      S.DC_E_perc= function(i){return Math.round(S.DC_E[i]/S.DC_E_tot*100);};
       S.t_stop = t;
       if (t!==t_start+60*1000*(minutes.length-1)) S.OK = false;
        //console.log(S.OK,t,t_start+60*1000*minutes.length);

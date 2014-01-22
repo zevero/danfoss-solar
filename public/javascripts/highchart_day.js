@@ -4,6 +4,22 @@ $(function () {
       S.DC_P[s].data[i] = Math.round(S.DC_V[s].data[i]*S.DC_I[s].data[i]/1000);
     }
   }
+  
+  function show_click_stats(val){
+    var n = Math.max(0,Math.min(S.n,Math.floor((val - S.t_start)/60/1000))),
+        E = [0,0,0], html = '';
+   E = E.map(function(v,i){
+     var e = S.DC_P[i].data.slice(0,n).reduce(function(pv,cv){
+       return pv+cv/60;
+     });
+     html+= Math.round(e) + '<small> '+Math.round(e/S.DC_E_tot)/10+'%</small> ';
+     return Math.round(e);
+   });
+   
+   $('#clickstats').html(html);
+  }
+  
+  
   Highcharts.setOptions({
     global: {
       useUTC: false
@@ -18,7 +34,7 @@ $(function () {
            zoomType: 'xy',    
            events: {
               click: function (e) {
-                console.log(e);
+                var t = e.xAxis[0].value;
                 for(var i=0;i<Highcharts.charts.length;i++){
                   var chart = Highcharts.charts[i];
                   if (!chart) continue;
@@ -27,9 +43,10 @@ $(function () {
                     color: 'red',
                     dashStyle: 'dot',
                     width: 2,
-                    value: e.xAxis[0].value
+                    value: t
                   });
                 }
+                show_click_stats(t);
               }
             }
         },
