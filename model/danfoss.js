@@ -49,7 +49,7 @@ var D = {
         }
         var m = minutes[i++];
         var p_dc=0, eff;
-        for(var s=1;s<3;s++) { p_dc+= D.X(m,'I_DC_'+s) * D.X(m,'U_DC_'+s); }
+        for(var s=1;s<=3;s++) { p_dc+= D.X(m,'I_DC_'+s) * D.X(m,'U_DC_'+s); }
         eff = (p_dc)? D.X(m,'P_AC')/p_dc:false ;
         return function(val){
            switch (val) {
@@ -58,6 +58,7 @@ var D = {
             case "P_AC_3":
               var s= val.slice(5);
               var p = (eff)?Math.round(eff * D.X(m,'I_DC_'+s) * D.X(m,'U_DC_'+s))/1000:0;
+              //console.log(D.X(m,'TIMESTAMP'),eff,s,p,D.X(m,'P_AC'),p_dc);
               return p;
             default:
               return D.X(m,val);
