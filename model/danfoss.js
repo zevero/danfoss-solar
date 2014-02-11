@@ -1,5 +1,6 @@
 var path = __dirname + '/../data/'
   ,  prefix = 'danfoss-'
+  ,  wp_string = [4750,3780,4610] //expects 3 numbers. For unused strings put 0 [6500,4000,0]
   ,  fs   = require("fs")
   ,  unique = function unique(value, index, self) { return self.indexOf(value) === index;}
   ;
@@ -81,6 +82,7 @@ var D = {
         DC_E:[0, 0, 0],
         DC_E_tot: 0,
         DC_P: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
+        DC_rP: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
         DC_V: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
         DC_I: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
         EFF: [{ name: 'Efficiency', data: []}],
@@ -92,7 +94,9 @@ var D = {
         t_tomorrow: (t_t < new Date())?t_t.toISOString().slice(2,10):false,
         n: minutes.length,
         AC_E: D.X(m_last,'E_DAY'),
-        OK: true
+        OK: true,
+        wp_string: wp_string,
+        wp_total: wp_string.reduce(function(a, b) {return a + b;})//summe
       };
       while(++i<minutes.length){
         m = minutes[i];

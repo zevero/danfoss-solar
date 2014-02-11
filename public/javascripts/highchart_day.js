@@ -1,9 +1,17 @@
 $(function () {
-  for(var s=0;s<S.DC_V.length;s++){
+  
+  var p;
+  for(var s=0;s<S.wp_string.length;s++){
     for(var i=0;i<S.DC_V[s].data.length;i++){
-      S.DC_P[s].data[i] = Math.round(S.DC_V[s].data[i]*S.DC_I[s].data[i]/1000);
+      S.DC_P[s].data[i] = p = Math.round(S.DC_V[s].data[i]*S.DC_I[s].data[i]/1000);
+      S.DC_rP[s].data[i] = Math.round(1000 * p/S.wp_string[s]);
     }
   }
+  S.wp_plotLines = function(){
+    if (!S.wp_string[1]) return [];
+    if (!S.wp_string[2]) return [{color: '#FF0000',width: 2,value: s.wp_string[0]/S.wp_total}];
+    return [{color: '#FF0000',width: 2,value: S.wp_string[0]/S.wp_total*100},{color: '#FF0000',width: 2,value: (S.wp_string[0]+S.wp_string[1])/S.wp_total*100}];
+  };
   
   function show_click_stats(val){
     var n = Math.max(0,Math.min(S.n,Math.floor((val - S.t_start)/60/1000))),
@@ -29,33 +37,36 @@ $(function () {
      '#2266bb', 
      '#001188'
     ],
-        chart: {
-           type: 'spline',
-           zoomType: 'xy',    
-           events: {
-              click: function (e) {
-                var t = e.xAxis[0].value;
-                for(var i=0;i<Highcharts.charts.length;i++){
-                  var chart = Highcharts.charts[i];
-                  if (!chart) continue;
-                  chart.xAxis[0].removePlotLine();
-                  chart.xAxis[0].addPlotLine({
-                    color: 'red',
-                    dashStyle: 'dot',
-                    width: 2,
-                    value: t
-                  });
-                }
-                show_click_stats(t);
-              }
+    chart: {
+       type: 'spline',
+       zoomType: 'xy',    
+       events: {
+          click: function (e) {
+            var t = e.xAxis[0].value;
+            for(var i=0;i<Highcharts.charts.length;i++){
+              var chart = Highcharts.charts[i];
+              if (!chart) continue;
+              chart.xAxis[0].removePlotLine();
+              chart.xAxis[0].addPlotLine({
+                color: 'red',
+                dashStyle: 'dot',
+                width: 2,
+                value: t
+              });
             }
-        },
+            show_click_stats(t);
+          }
+        }
+    },
     xAxis: {
       type: 'datetime',
       dateTimeLabelFormats: { 
          month: '%e. %b',
          year: '%b'
       }
+    },
+    yAxis: {
+      min: 0
     },
     plotOptions: {
       series: {
@@ -83,14 +94,10 @@ $(function () {
   };
  
   var O_P = {
-    title: {
-      text: 'DC Power per String (Click here for normal stacking)'
-    },
+    chart: {},
+    title: {},
     yAxis: {
-      title: {
-        text: 'Watt [W]'
-      },
-      min: 0
+      title: {}
     },
    tooltip: {
       formatter: function() {
@@ -102,32 +109,36 @@ $(function () {
         return '<b>'+Highcharts.dateFormat('%H:%M', this.x) + '</b> →→ '+ t +' W(100%)<br/>' + s;
       }
     },
-    plotOptions: { series: { stacking: null }},
+    plotOptions: { series: { stacking: 'percent' }},
     series: S.DC_P
   };
-   
+  var state = -1;
   var start = function(){ //Add percent Stacking 
+    state = ++state % 3;
+ 
+    O_P.yAxis.plotLines = [];
+    O_P.chart.type = "area";
+    switch (state){
+      case 1:
+        O_P.title.text= 'DC Power - per String (Click this title for percent stacking)';
+        O_P.yAxis.title.text='Watt [W]';
+        O_P.plotOptions.series.stacking=null;
+        O_P.chart.type = "spline";
+        break;
+      case 2:
+        O_P.title.text= 'DC Power - % stacked (Click this title for normal stacking)';
+        O_P.yAxis.title.text='Watt [%]';
+        O_P.plotOptions.series.stacking='percent';
+        O_P.yAxis.plotLines = S.wp_plotLines();
+        break;
+      default:
+        O_P.title.text= 'DC Power - stacked (Click this title to unstack)';
+        O_P.yAxis.title.text='Watt [W]';
+        O_P.plotOptions.series.stacking='normal';
+    }
+    
     if ($('#DC_P').highcharts())  $('#DC_P').highcharts().destroy();
     $('#DC_P').empty().highcharts(O_P);
-    var stacking = O_P.plotOptions.series.stacking;
-    if (stacking==='percent') {
-      O_P.title.text= 'DC Power - per String (Click this title for normal stacking)';
-      O_P.yAxis.title.text='Watt [W]';
-      O_P.plotOptions.series.stacking=null;
-      O_P.chart.type = "spline";
-    }
-    else if (stacking==='normal') {
-      O_P.title.text= 'DC Power - % stacked (Click this title to unstack)';
-      O_P.yAxis.title.text='Watt [%]';
-      O_P.plotOptions.series.stacking='percent';
-      O_P.chart.type = "area";
-    }
-    else if (stacking===null){
-      O_P.title.text= 'DC Power - stacked (Click this title for percent stacking)';
-      O_P.yAxis.title.text='Watt [W]';
-      O_P.plotOptions.series.stacking='normal';
-      O_P.chart.type = "area";
-    }
 
    $('text.highcharts-title').click(start);
   };
@@ -136,6 +147,35 @@ $(function () {
 
 
 
+  $('#DC_rP').highcharts({
+    chart: {
+      type:'spline'
+    },
+    title: {
+      text: 'DC relative Power'
+    },
+    yAxis: {
+      title: {
+        text: 'W/kWp'
+      }
+    },
+    tooltip: {
+      formatter: function() {
+        var s='',t=0,p=0;
+        this.points.forEach(function(point,s){
+          t+=point.y/S.wp_string[s];
+          p+=point.y/1000*S.wp_string[s];
+        });
+        t = Math.round(t * S.wp_total/10);
+        this.points.forEach(function(point){
+          s += '<b>'+ point.series.name +'</b> → '+ point.y +' ('+ Math.round(point.y/t*100)+'%)'+'<br/>';
+        });
+        return '<b>'+Highcharts.dateFormat('%H:%M', this.x) + '</b> →→ '+ t + ' ≙ '+ Math.round(p) +'W<br/>' + s;
+      }
+    },
+    series: S.DC_rP
+  });
+  
   $('#DC_V').highcharts({
     title: {
       text: 'DC Voltage'
@@ -144,7 +184,7 @@ $(function () {
       title: {
         text: 'Voltage [V]'
       },
-      min: 0
+      max: 800
     },
    tooltip: {
       formatter:  function(){return formatter.call(this,'V');}
@@ -159,8 +199,7 @@ $(function () {
     yAxis: {
       title: {
         text: 'Current [mA]'
-      },
-      min: 0
+      }
     },
    tooltip: {
       formatter:  function(){return formatter.call(this,'mA');}
@@ -196,8 +235,7 @@ $(function () {
     yAxis: {
       title: {
         text: 'Temperature [°C]'
-      },
-      min: 0
+      }
     },
     legend: {
       enabled: false
