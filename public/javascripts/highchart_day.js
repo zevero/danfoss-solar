@@ -27,7 +27,6 @@ $(function () {
    $('#clickstats').html(html);
   }
   
-  
   Highcharts.setOptions({
     global: {
       useUTC: false
@@ -39,22 +38,12 @@ $(function () {
     ],
     chart: {
        type: 'spline',
-       zoomType: 'xy',    
+       zoomType: 'xy',
        events: {
-          click: function (e) {
-            var t = e.xAxis[0].value;
-            for(var i=0;i<Highcharts.charts.length;i++){
-              var chart = Highcharts.charts[i];
-              if (!chart) continue;
-              chart.xAxis[0].removePlotLine();
-              chart.xAxis[0].addPlotLine({
-                color: 'red',
-                dashStyle: 'dot',
-                width: 2,
-                value: t
-              });
-            }
-            show_click_stats(t);
+          click: function (e) { 
+            var value = e.xAxis[0].value;
+            draw_plot_lines(value,'mouse_click',1,'dash','red');
+            show_click_stats(value);
           }
         }
     },
@@ -81,11 +70,14 @@ $(function () {
       }
     },
     tooltip: {
-            shared: true,
-            crosshairs: true
-        }
+      shared: true,
+      followPointer: false, 
+      followTouchMove: false
+      //crosshairs: true
+    }
   });
-  var formatter = function(unit) {
+  
+  function formatter(unit) {
     var s='<b>'+Highcharts.dateFormat('%H:%M', this.x) + '<br/>';
     this.points.forEach(function(point){
       s += '<b>'+ point.series.name +'</b> → '+ point.y +' '+ unit +'<br/>';
@@ -247,9 +239,33 @@ $(function () {
   });
 
     //Hide all Strings, which have no Data
-    ['#DC_P','#DC_V','#DC_I'].forEach(function(id){
+    Highcharts.charts.forEach(function(chart){
       [0,1,2].forEach(function(s){
-        if (!S.DC_E[s]) $(id).highcharts().series[s].hide();
+        if (!S.DC_E[s]) chart.series[s].hide();
       });
     });
+    
+    
+  //Plotlines
+  function draw_plot_lines(value,id,width,dash,color){
+    Highcharts.charts.forEach(function(chart){
+      if(!chart) return;
+      chart.xAxis[0].removePlotLine(id);
+      chart.xAxis[0].addPlotLine({
+        value: value,
+        width: width,
+        color: color,
+        dashStyle: dash,                   
+        id: id
+      });
+    });  
+   }
+    
+  //Plotlines on mousemove
+  $( "#all-highcharts" ).on( "mousemove", "div[data-highcharts-chart]", function synchronizeCrossHairs(e) {
+    var chart = $(this).highcharts();
+    e = chart.pointer.normalize(e);
+    var value = chart.xAxis[0].toValue(e.chartX);
+    draw_plot_lines(value,'mouse_move',1,'normal','red');
+  });
 });

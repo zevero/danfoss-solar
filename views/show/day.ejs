@@ -18,13 +18,18 @@
        η= <%=Math.round(S.E/E*10000)/100%>
        → <%=S.E%>kWh <%=(S.OK?'OK':'NOK')%> <%=S.OHM%>MΩ 
     </h2>
-    <div id="clickstats"></div>
-    <div id="DC_P"></div>
-    <div id="DC_rP"></div>
-    <div id="DC_V"></div>
-    <div id="DC_I"></div>
-    <div id="EFF"></div>
-    <div id="T"></div>
+    <div id="all-highcharts">
+      <div id="clickstats"></div>
+      <div id="DC_P"></div>
+      <div id="DC_rP"></div>
+      <div id="DC_V"></div>
+      <div id="DC_I"></div>
+      <div id="EFF"></div>
+      <div id="T"></div>
+    </div>
+    <div id="report"></div>
+    
+    
     <script type="text/javascript">
       var S = <%- JSON.stringify(S) %>;
     </script>
