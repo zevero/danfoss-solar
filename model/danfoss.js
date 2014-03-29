@@ -87,6 +87,7 @@ var D = {
         DC_I: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
         EFF: [{ name: 'Efficiency', data: []}],
         T: [{ name: 'Temperature [°C]', data: []}],
+        F: [{ name: 'Frequency [Hz]', data: []}],
         E: D.X(m_last,'E_DAY'),
         OHM: -1,
         t_start: t_start,
@@ -129,8 +130,10 @@ var D = {
         S.EFF[0].data[i]=eff;
         
         //TEMPERATURE
-        S.T[0].data[i]=D.X(m,'T_WR')*1; 
-
+        S.T[0].data[i]=D.X(m,'T_WR')*1;
+        
+        //FREQUENCY
+        S.F[0].data[i]=D.X(m,'F_AC')*1;
       };
  
       S.DC_E = S.DC_E.map(function(v){return Math.round(v)/1000;});

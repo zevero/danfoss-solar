@@ -237,6 +237,26 @@ $(function () {
     },
     series: S.T
   });
+  
+ $('#F').highcharts({
+    title: {
+      text: 'Frequency'
+    },
+    yAxis: {
+      title: {
+        text: 'Frequency [Hz]'
+      },
+     min: 49.8,
+     max: 50.2
+    },
+    legend: {
+      enabled: false
+    },
+   tooltip: {
+      formatter:  function(){return formatter.call(this,'Hz');}
+    },
+    series: S.F
+  });
 
     //Hide all Strings, which have no Data
     Highcharts.charts.forEach(function(chart){
