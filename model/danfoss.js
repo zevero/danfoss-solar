@@ -78,13 +78,16 @@ var D = {
         t_start = new Date(D.X(minutes[0],'TIMESTAMP')).getTime(),
         t_y = new Date(t_start - 24*3600*1000),
         t_t = new Date(t_start + 24*3600*1000),
+        get_serie = function(){
+          return [{name: 'String '+wp_string[0]+' Wp',data: []},{name: 'String '+wp_string[1]+' Wp',data: []},{name: 'String '+wp_string[2]+' Wp',data: []}];
+        };
       S={
         DC_E:[0, 0, 0],
         DC_E_tot: 0,
-        DC_P: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
-        DC_rP: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
-        DC_V: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
-        DC_I: [{name: 'String 1',data: []},{name: 'String 2',data: []},{name: 'String 3',data: []}],//3 Strings
+        DC_P: get_serie(),
+        DC_rP: get_serie(),
+        DC_V: get_serie(),
+        DC_I: get_serie(),
         EFF: [{ name: 'Efficiency', data: []}],
         T: [{ name: 'Temperature [°C]', data: []}],
         F: [{ name: 'Frequency [Hz]', data: []}],
