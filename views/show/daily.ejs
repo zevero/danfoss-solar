@@ -3,7 +3,7 @@
   <head>
     <title><%= title %></title>
     <script type="text/javascript" src="/javascripts/external/jquery.min.js"></script>
-    <script type="text/javascript" src="/javascripts/external/highcharts/highcharts.js"></script>
+    <script type="text/javascript" src="/javascripts/external/highcharts-custom.js"></script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
@@ -42,17 +42,13 @@ $(function () {
         },{
           name: 'String <%= data.wp_string[2]  %>Wp',
           data: []
-        }
-      ],
-      series_sf = [{
-          name: 'String <%= data.wp_string[1]  %>Wp',
-          data: []
         },{
-          name: 'String <%= data.wp_string[2]  %>Wp',
+          name: 'Base kWh per day',
+          yAxis: 1,
           data: []
-        }
-      ];
-  
+        }],
+      series_sf = $.extend(true,[],series);
+  data.days.reverse();
   data.days.forEach(function(d){
       var rel = [
             d.E[1]*100/d.E[0] * data.wp_string[0]/data.wp_string[1],
@@ -65,9 +61,11 @@ $(function () {
           tr = $('<tr>');
       series[0].data.push([timestamp,rel[0]]);
       series[1].data.push([timestamp,rel[1]]);
+      series[2].data.push([timestamp, d.E[0]]);
       if (d.Esf[0] && d.Esf[1] && d.Esf[2]) {
         series_sf[0].data.push([timestamp,rel_sf[0]]);
         series_sf[1].data.push([timestamp,rel_sf[1]]);
+        series_sf[2].data.push([timestamp, d.Esf[0]]);
       }
       tr.append($('<td>').append($('<a href="'+d.date+'">').text(d.date)));
       tr.append($('<td>').text(Math.round(d.E[0]*1000)/1000));
@@ -83,32 +81,82 @@ $(function () {
       tr.append($('<td>').text(Math.round(rel_sf[1])));
       tbody.append(tr);
   });
-    
-  $('#highchart_daily').highcharts({
+  
+  
+  var opts = {
+    xAxis: {
+       type: 'datetime'
+    },
+    yAxis: [{ // Primary yAxis
+            labels: {
+                valueSuffix: '%'
+            },
+            title: {
+                text: 'Comparison'
+            },       
+            min:0,
+            max:100
+        }, { // Secondary yAxis
+            title: {
+                text: 'kWh / day',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            labels: {
+                valueSuffix: ' kWh',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            opposite: true,
+            min:0
+        }],
+      tooltip: {shared:true}
+  };
+  $('#highchart_daily').highcharts($.extend(true,{
      title: {
        text: 'Daily Energy relative to String <%= data.wp_string[0]  %>Wp'
      },
-     yAxis: {
-       min:0, max:100
-     },
-     xAxis: {
-       type: 'datetime'
-     },
      series: series
-  });
-  $('#highchart_daily_shade_free').highcharts({
+  },opts));
+  $('#highchart_daily_shade_free').highcharts($.extend(true,{
      title: {
        text: 'Daily Energy relative to String <%= data.wp_string[0]  %>Wp Shade Free'
      },
-     yAxis: {
-       min:0, max:100
-     },
-     xAxis: {
-       type: 'datetime'
-     },
      series: series_sf
-  });
+  },opts));
 });
+
+
+$(function() { //table sorter
+  $('table#daily').on('click', 'th', function() {
+    var th = $(this);
+    //console.log('th',th.html());
+    $(this).parents('table').find('tbody').each(function() {
+      var tbody = $(this);
+      var rows = tbody.find('tr').toArray().sort(comparer(th.index()));
+
+      this.asc = !this.asc;
+      if (!this.asc) {
+        rows = rows.reverse();
+      }
+      for (var i = 0; i < rows.length; i+=1) {
+        tbody.append(rows[i]);
+      }
+    });
+  });
+  function comparer(index) {
+    return function(a, b) {
+      var valA = getCellValue(a, index), valB = getCellValue(b, index);
+      return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB);
+    };
+  }
+  function getCellValue(row, index) {
+    return $(row).children('td').eq(index).html();
+  }
+});
+
     </script>
   </body>
 </html>

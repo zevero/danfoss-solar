@@ -37,7 +37,6 @@ $(function () {
      '#001188'
     ],
     chart: {
-       type: 'spline',
        zoomType: 'xy',
        events: {
           click: function (e) { 
@@ -140,9 +139,6 @@ $(function () {
 
 
   $('#DC_rP').highcharts({
-    chart: {
-      type:'spline'
-    },
     title: {
       text: 'DC relative Power'
     },

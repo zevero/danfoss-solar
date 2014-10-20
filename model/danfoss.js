@@ -149,6 +149,7 @@ var D = {
       };
  
       S.DC_E = S.DC_E.map(function(v){return Math.round(v)/1000;});
+      S.DC_E_shade_free = S.DC_E_shade_free.map(function(v){return Math.round(v)/1000;});
       S.DC_E_tot = S.DC_E[0] + S.DC_E[1] + S.DC_E[2];
       S.DC_E_perc= function(i){return Math.round(S.DC_E[i]/S.DC_E_tot*100);};
       S.t_stop = t;
