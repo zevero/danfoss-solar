@@ -177,5 +177,17 @@ module.exports = {
   },
   dates: function(){
      return D.dates();
+  },
+  days: function(){
+    var data = {days:[], wp_string:wp_string};
+     D.dates().forEach(function(date){
+       var day = D.day_highchart(date);
+       if(!day.DC_E[0]) return;
+       data.days.push({
+         date: date,
+         E: day.DC_E
+       });
+     });
+     return data;
   }
 };

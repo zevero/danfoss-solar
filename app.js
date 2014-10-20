@@ -30,8 +30,9 @@ if ('development' === app.get('env')) {
 }
 
 app.get('/',routes.index);
-app.get('/sma/:date.CSV', routes.sma);
+app.get('/show/daily', routes.show.daily);
 app.get('/show/:date', routes.show.day);
+app.get('/sma/:date.CSV', routes.show.day_sma);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

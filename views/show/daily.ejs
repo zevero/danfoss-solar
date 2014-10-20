@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <script type="text/javascript" src="/javascripts/external/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/external/highcharts/highcharts.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <div id="highchart_daily"></div>
+    <table id="daily">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th><%= data.wp_string[0]  %>Wp</th>
+          <th><%= data.wp_string[1]  %>Wp</th>
+          <th><%= data.wp_string[2]  %>Wp</th>
+          <th><%= data.wp_string[1]  %>Wp over <%= data.wp_string[0]  %>Wp</th>
+          <th><%= data.wp_string[2]  %>Wp over <%= data.wp_string[0]  %>Wp</th>
+        </tr>
+      </thead>
+      <tbody>
+
+      </tbody>
+    </table>
+    <script>
+$(function () {
+  var data = <%- JSON.stringify(data) %>,
+      tbody = $('table#daily tbody'),
+      series = [{
+          name: 'String <%= data.wp_string[1]  %>Wp',
+          data: []
+        },{
+          name: 'String <%= data.wp_string[2]  %>Wp',
+          data: []
+        }
+      ];
+  
+  data.days.forEach(function(d){
+      var rel = [
+            d.E[1]*100/d.E[0] * data.wp_string[0]/data.wp_string[1],
+            d.E[2]*100/d.E[0] * data.wp_string[0]/data.wp_string[2]
+          ],
+          timestamp = Date.parse("20" + d.date),
+          tr = $('<tr>');
+      series[0].data.push([timestamp,rel[0]]);
+      series[1].data.push([timestamp,rel[1]]);
+      tr.append($('<td>').append($('<a href="'+d.date+'">').text(d.date)));
+      tr.append($('<td>').text(d.E[0]));
+      tr.append($('<td>').text(d.E[1]));
+      tr.append($('<td>').text(d.E[2]));
+      tr.append($('<td>').text(Math.round(rel[0])));
+      tr.append($('<td>').text(Math.round(rel[1])));
+      tbody.append(tr);
+  });
+    
+  $('#highchart_daily').highcharts({
+     title: {
+       text: 'Daily Energy relative to String <%= data.wp_string[0]  %>Wp'
+     },
+     yAxis: {
+       max:100
+     },
+     xAxis: {
+       type: 'datetime'
+     },
+     series: series
+  });
+});
+    </script>
+  </body>
+</html>

@@ -8,6 +8,5 @@ module.exports = {
   index: function(req, res){
     res.render('index', { title: 'Danfoss', dates: danfoss.dates()});
   },
-  show: require('./show'),
-  sma: require('./sma')
+  show: require('./show')
 };
