@@ -28,14 +28,15 @@
           <th><%= data.wp_string[2]  %>Wp over <%= data.wp_string[0]  %>Wp</th>
         </tr>
       </thead>
-      <tbody>
-
-      </tbody>
+      <tbody></tbody>
+      <tfoot></tfoot>
     </table>
     <script>
 $(function () {
   var data = <%- JSON.stringify(data) %>,
+      stat = {E: [0,0,0], rel: [0,0]},
       tbody = $('table#daily tbody'),
+      tfoot = $('table#daily tfoot'),
       series = [{
           name: 'String <%= data.wp_string[1]  %>Wp',
           data: []
@@ -59,6 +60,7 @@ $(function () {
           ],
           timestamp = Date.parse("20" + d.date),
           tr = $('<tr>');
+      
       series[0].data.push([timestamp,rel[0]]);
       series[1].data.push([timestamp,rel[1]]);
       series[2].data.push([timestamp, d.E[0]]);
@@ -80,8 +82,21 @@ $(function () {
       tr.append($('<td>').text(Math.round(rel_sf[0])));
       tr.append($('<td>').text(Math.round(rel_sf[1])));
       tbody.append(tr);
+      
+      stat.E[0]+=d.E[0];
+      stat.E[1]+=d.E[1];
+      stat.E[2]+=d.E[2];
+      stat.rel[0]+=rel[0];
+      stat.rel[1]+=rel[1];
   });
-  
+  tfoot.append($('<tr>')
+          .append($('<th>').text(data.days.length))
+          .append($('<th>').text(Math.round(stat.E[0])))
+          .append($('<th>').text(Math.round(stat.E[1])))
+          .append($('<th>').text(Math.round(stat.E[2])))
+          .append($('<th>').text(Math.round(stat.rel[0]/data.days.length)))
+          .append($('<th>').text(Math.round(stat.rel[1]/data.days.length)))      
+  );
   
   var opts = {
     xAxis: {
