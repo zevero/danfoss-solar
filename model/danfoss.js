@@ -1,6 +1,7 @@
 var path = __dirname + '/../data/'
   ,  prefix = 'danfoss-'
   ,  wp_string = [4750,3780,4610] //expects 3 numbers. For unused strings put 0 [6500,4000,0]
+  ,  shade_free = {from: "13:00", duration: 60}
   ,  fs   = require("fs")
   ,  unique = function unique(value, index, self) { return self.indexOf(value) === index;}
   ;
@@ -75,14 +76,17 @@ var D = {
     var minutes = D.minutes4day(date);
     var i=-1,m, t, tl, s, p, V, I, p_dc, eff,
         m_last = minutes[minutes.length-1],
-        t_start = new Date(D.X(minutes[0],'TIMESTAMP')).getTime(),
+        t_start_date = new Date(D.X(minutes[0],'TIMESTAMP')),
+        t_start = t_start_date.getTime(),
         t_y = new Date(t_start - 24*3600*1000),
         t_t = new Date(t_start + 24*3600*1000),
+        t_shade_free = Date.parse(t_start_date.toISOString().slice(0,10) + " " + shade_free.from), t_shade_free_minute = 0,
         get_serie = function(){
           return [{name: 'String '+wp_string[0]+' Wp',data: []},{name: 'String '+wp_string[1]+' Wp',data: []},{name: 'String '+wp_string[2]+' Wp',data: []}];
         };
       S={
         DC_E:[0, 0, 0],
+        DC_E_shade_free:[0, 0, 0],
         DC_E_tot: 0,
         DC_P: get_serie(),
         DC_rP: get_serie(),
@@ -105,6 +109,7 @@ var D = {
       while(++i<minutes.length){
         m = minutes[i];
         t = new Date(D.X(m,'TIMESTAMP')).getTime();
+        
         p_dc=0;
         for (s=1; s<=3; s++){//3 Strings
           V = D.X(m,'U_DC_'+s)*1;
@@ -116,8 +121,12 @@ var D = {
           //S.DC_P[s-1].data[i] = Math.round(V*I/1000); //is done on client
 
           //Energy
+          //console.log(t_start, t, t_shade_free, t_shade_free_minute);
           S.DC_E[s-1]+=p/60;
-          
+          if (t_shade_free <= t && t_shade_free_minute <= shade_free.duration) {
+            S.DC_E_shade_free[s-1]+=p/60;
+            if (s===3) t_shade_free_minute++;
+          }
           //VOLTAGE  
           S.DC_V[s-1].data[i]=V;
           
@@ -182,10 +191,11 @@ module.exports = {
     var data = {days:[], wp_string:wp_string};
      D.dates().forEach(function(date){
        var day = D.day_highchart(date);
-       if(!day.DC_E[0]) return;
+       if(!day.DC_E[0]) return;      
        data.days.push({
          date: date,
-         E: day.DC_E
+         E: day.DC_E,
+         Esf: day.DC_E_shade_free
        });
      });
      return data;
