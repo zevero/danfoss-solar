@@ -72,10 +72,15 @@ var D = {
        E: D.X(m_last,'E_DAY')
     };
   },
+  day_highchart_cache: {},
   day_highchart: function(date){
+    if (D.day_highchart_cache[date]) {
+      return D.day_highchart_cache[date];
+    }
     var minutes = D.minutes4day(date);
     var i=-1,m, t, tl, s, p, V, I, p_dc, eff,
         m_last = minutes[minutes.length-1],
+        t_now_date = new Date(),
         t_start_date = new Date(D.X(minutes[0],'TIMESTAMP')),
         t_start = t_start_date.getTime(),
         t_y = new Date(t_start - 24*3600*1000),
@@ -155,6 +160,8 @@ var D = {
       S.t_stop = t;
       if (t!==t_start+60*1000*(minutes.length-1)) S.OK = false;
        //console.log(S.OK,t,t_start+60*1000*minutes.length);
+       
+      if (t_now_date.toISOString().slice(0,10)!== t_start_date.toISOString().slice(0,10)) D.day_highchart_cache[date] = S;
       return S;
    },
    
