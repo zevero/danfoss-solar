@@ -114,7 +114,7 @@ $(function () {
         O_P.title.text= 'DC Power - per String (Click this title for percent stacking)';
         O_P.yAxis.title.text='Watt [W]';
         O_P.plotOptions.series.stacking=null;
-        O_P.chart.type = "spline";
+        O_P.chart.type = "line";
         break;
       case 2:
         O_P.title.text= 'DC Power - % stacked (Click this title for normal stacking)';
