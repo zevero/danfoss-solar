@@ -39,14 +39,17 @@ $(function () {
       tfoot = $('table#daily tfoot'),
       series = [{
           name: 'String <%= data.wp_string[1]  %>Wp',
-          data: []
+          data: [],
+          zIndex: 2
         },{
           name: 'String <%= data.wp_string[2]  %>Wp',
-          data: []
+          data: [],
+          zIndex: 2
         },{
           name: 'Base kWh per day',
           yAxis: 1,
-          data: []
+          data: [],
+          zIndex: 1
         }],
       series_sf = $.extend(true,[],series);
   data.days.reverse();
