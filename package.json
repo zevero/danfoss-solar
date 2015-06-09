@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": false,
   "scripts": {
-    "start": "nodemon -e js,css,html,json,jade app.js"
+    "start": "nodemon -e js,css,html,json,jade danfoss.js"
   },
   "dependencies": {
     "express": "latest",
